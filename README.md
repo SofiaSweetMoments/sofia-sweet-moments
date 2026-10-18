@@ -1,19 +1,10 @@
-# Sofia Sweet Moments — заявки в Telegram
+# Sofia Sweet Moments — admin orders
 
-## Что делает проект
-Сайт отдаётся из `index.html`. При отправке формы браузер передаёт поля на `/api/order`, а сервер отправляет заявку в Telegram-чат владельца через Bot API.
+This package adds a password-protected admin panel at `/admin/login` and an order submission endpoint at `/api/orders`.
 
-## Переменные окружения Render
-- `BOT_TOKEN` — токен, полученный у BotFather. Добавляйте только в Render → Environment, не в файлы и не в GitHub.
-- `ADMIN_CHAT_ID` — числовой chat ID вашего личного чата с ботом. Узнайте его, написав боту `@userinfobot` в Telegram (он покажет ваш Telegram ID), затем сначала нажмите Start у собственного бота `@SofiaSweetMomentsbot`. В большинстве личных чатов ID пользователя и chat ID совпадают. Если отправка не сработает, проверьте ID и что вы запускали своего бота.
+Required Render environment variables:
+- `ADMIN_USER` — admin login (for example `sofia`)
+- `ADMIN_PASSWORD` — a strong unique admin password; store only in Render Environment, never in GitHub
+- `FLASK_SECRET_KEY` — long random secret
 
-## Развёртывание на Render
-1. Загрузите все файлы из этого проекта в приватный GitHub-репозиторий.
-2. В Render нажмите New → Web Service и подключите репозиторий `sofia-sweet-moments`.
-3. Render может распознать `render.yaml`; если создаёте вручную, Runtime Python, Build Command `pip install -r requirements.txt`, Start Command `gunicorn app:app`, Free plan.
-4. В настройках Environment добавьте `BOT_TOKEN` и `ADMIN_CHAT_ID`. Не публикуйте значения.
-5. Запустите Deploy. Проверьте адрес сайта и `/health` (ожидается `{"status":"ok"}`).
-6. Отправьте тестовую заявку с сайта и убедитесь, что она пришла в Telegram.
-
-## Важно
-Бесплатный сервис Render может засыпать после периода без активности, поэтому первая заявка после простоя иногда приходит с задержкой. Не используйте эту форму для передачи платёжных данных или иной чувствительной информации.
+Important: the current example stores orders in SQLite under `/tmp`. Render's temporary filesystem can be cleared after restart/redeploy, so this version is for testing only. Before accepting real orders, connect persistent storage (a persistent disk or external PostgreSQL database).
